@@ -15,11 +15,15 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        dataBinding {
+            enabled true
+        }
+
+        resValue "string", "api_key", "<< -- Add your Api Key here.. >>"
     }
 
-    dataBinding{
-        enabled true
-    }
+
 
     buildTypes {
         release {

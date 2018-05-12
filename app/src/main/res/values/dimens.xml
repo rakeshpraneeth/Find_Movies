@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Density Independent Pixels-->
+    <dimen name="fm_5dp">5dp</dimen>
+
+    <!-- Scale Independent Pixels-->
+    <dimen name="fm_13sp">13sp</dimen>
+    <dimen name="fm_20sp">20sp</dimen>
+</resources>

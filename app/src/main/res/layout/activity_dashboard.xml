@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".views.activities.DashboardActivity">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.krp.findmovies.viewModels.MoviesListViewModel" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.constraint.Guideline
+            android:id="@+id/startGuideline"
+            style="@style/verticalGuidelineStyle"
+            app:layout_constraintGuide_percent="0.02" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/moviesListRV"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="@{viewModel.recyclerViewVisibility}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/endGuideline"
+            app:layout_constraintStart_toEndOf="@+id/startGuideline"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <include
+            layout="@layout/no_internet_connection_layout"
+            bind:visibility="@{viewModel.noInternetVisibility}" />
+
+        <TextView
+            android:id="@+id/retrieveFailure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/unable_to_retrieve_data"
+            android:textColor="@android:color/black"
+            android:visibility="@{viewModel.retrievalFailureMsgVisibility}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.progressbarVisibility}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/endGuideline"
+            style="@style/verticalGuidelineStyle"
+            app:layout_constraintGuide_percent="0.98" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

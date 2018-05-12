@@ -1,5 +1,12 @@
 package com.krp.findmovies.interfaces;
 
+import com.krp.findmovies.model.MoviesResponse;
+
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
+
 /**
  * Created by rakeshpraneeth.
  * This interface is used to handle all the API calls using Retrofit.
@@ -8,4 +15,8 @@ package com.krp.findmovies.interfaces;
  */
 
 public interface FmApiService {
+
+    // This is used to get list of particular movies.
+    @GET("3/{movieType}")
+    Call<MoviesResponse> getMoviesList(@Path(value = "movieType", encoded = true) String movieType, @Query("api_key") String apiKey);
 }
