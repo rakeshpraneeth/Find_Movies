@@ -33,5 +33,6 @@ ext {
     jUnitVersion = '4.12'
     testRunnerVersoin = '1.0.2'
     espressoVersion = '3.0.2'
-
+    retrofitVersion = '2.3.0'
+    picassoVersion = '2.5.2'
 }
