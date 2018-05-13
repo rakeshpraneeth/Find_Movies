@@ -11,4 +11,6 @@
     <string name="unable_to_retrieve_data">Unable to retrieve data</string>
     <string name="need_a_movie_id">Need a Movie Id for detail screen</string>
 
+    <string name="posterImage">posterImage</string>
+    <string name="backdropImage">backdropImage</string>
 </resources>
