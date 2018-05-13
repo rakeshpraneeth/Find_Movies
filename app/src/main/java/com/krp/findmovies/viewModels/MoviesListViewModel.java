@@ -96,6 +96,7 @@ public class MoviesListViewModel {
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
 
+                recyclerViewVisibility.set(View.GONE);
                 retrievalFailureMsgVisibility.set(View.VISIBLE);
                 progressbarVisibility.set(View.GONE);
             }

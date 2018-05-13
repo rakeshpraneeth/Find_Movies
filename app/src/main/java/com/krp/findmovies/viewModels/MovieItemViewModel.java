@@ -1,11 +1,14 @@
 package com.krp.findmovies.viewModels;
 
+import android.content.Intent;
 import android.databinding.BindingAdapter;
 import android.os.Parcel;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.krp.findmovies.R;
 import com.krp.findmovies.model.Movie;
+import com.krp.findmovies.views.activities.DetailActivity;
 import com.squareup.picasso.Picasso;
 
 public class MovieItemViewModel extends RowViewModel {
@@ -61,6 +64,15 @@ public class MovieItemViewModel extends RowViewModel {
                     .placeholder(R.drawable.placeholder)
                     .into(imageView);
 
+        }
+    }
+
+    public void onMovieItemClick(View view, int movieId){
+
+        if(view !=null){
+            Intent intent = new Intent(view.getContext(), DetailActivity.class);
+            intent.putExtra(DetailActivity.MOVIE_ID,movieId);
+            view.getContext().startActivity(intent);
         }
     }
 }

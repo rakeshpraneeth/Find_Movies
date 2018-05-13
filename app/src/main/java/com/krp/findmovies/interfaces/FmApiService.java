@@ -1,5 +1,6 @@
 package com.krp.findmovies.interfaces;
 
+import com.krp.findmovies.model.MovieDetail;
 import com.krp.findmovies.model.MoviesResponse;
 
 import retrofit2.Call;
@@ -19,4 +20,8 @@ public interface FmApiService {
     // This is used to get list of particular movies.
     @GET("3/{movieType}")
     Call<MoviesResponse> getMoviesList(@Path(value = "movieType", encoded = true) String movieType, @Query("api_key") String apiKey);
+
+    @GET("3/movie/{movieId}")
+    Call<MovieDetail> getMovieDetail(@Path(value = "movieId") int movieId,
+                                     @Query("api_key") String apiKey);
 }

@@ -3,6 +3,10 @@
 
     <!--Density Independent Pixels-->
     <dimen name="fm_5dp">5dp</dimen>
+    <dimen name="fm_10dp">10dp</dimen>
+    <dimen name="fm_20dp">20dp</dimen>
+    <dimen name="fm_150dp">150dp</dimen>
+    <dimen name="fm_230dp">230dp</dimen>
 
     <!-- Scale Independent Pixels-->
     <dimen name="fm_13sp">13sp</dimen>

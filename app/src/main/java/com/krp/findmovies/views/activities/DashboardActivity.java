@@ -30,6 +30,7 @@ public class DashboardActivity extends AppCompatActivity {
         viewModel = new MoviesListViewModel(this);
         viewModel.setAdapter(adapter);
         viewModel.fetchData(POPULAR_MOVIES);
+        setTitle(getString(R.string.popular));
 
         loadMoviesList();
         binding.setViewModel(viewModel);
@@ -45,16 +46,17 @@ public class DashboardActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.popular:
+                setTitle(item.getTitle());
                 if (viewModel != null) {
                     viewModel.fetchData(POPULAR_MOVIES);
                 }
                 break;
 
             case R.id.topRated:
+                setTitle(item.getTitle());
                 if (viewModel != null) {
                     viewModel.fetchData(TOP_RATED_MOVIES);
                 }
-
                 break;
 
         }

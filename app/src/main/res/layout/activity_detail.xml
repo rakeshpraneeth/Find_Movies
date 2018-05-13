@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".views.activities.DetailActivity">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.krp.findmovies.viewModels.MovieDetailViewModel" />
+    </data>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/backdropIV"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/fm_230dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="backdropImage"
+                android:scaleType="centerCrop"
+                android:src="@drawable/placeholder"
+                android:visibility="@{viewModel.detailsVisibility}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:setDetailImage="@{viewModel.movieDetail.backdropPath}" />
+
+            <View
+                android:id="@+id/background"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@android:color/darker_gray"
+                android:visibility="@{viewModel.detailsVisibility}"
+                app:layout_constraintBottom_toBottomOf="@+id/posterPathIV"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/backdropIV" />
+
+            <ImageView
+                android:id="@+id/posterPathIV"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/fm_150dp"
+                android:layout_marginLeft="@dimen/fm_20dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/placeholder"
+                android:visibility="@{viewModel.detailsVisibility}"
+                app:layout_constraintBottom_toBottomOf="@+id/backdropIV"
+                app:layout_constraintDimensionRatio="w,2:3"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/backdropIV"
+                app:setDetailImage="@{viewModel.movieDetail.posterPath}" />
+
+            <TextView
+                android:id="@+id/entertainmentTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/fm_10dp"
+                android:singleLine="true"
+                android:text="@{viewModel.movieDetail.originalTitle}"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/fm_20sp"
+                android:visibility="@{viewModel.detailsVisibility}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/posterPathIV"
+                app:layout_constraintTop_toBottomOf="@+id/backdropIV"
+                tools:text="Professor marston and the wonder women" />
+
+            <TextView
+                android:id="@+id/releaseDateTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.movieDetail.releaseDate}"
+                android:textColor="@android:color/black"
+                android:visibility="@{viewModel.detailsVisibility}"
+                app:layout_constraintEnd_toStartOf="@+id/runtimeTV"
+                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintStart_toEndOf="@+id/posterPathIV"
+                app:layout_constraintTop_toBottomOf="@+id/entertainmentTitle"
+                tools:text="Mar 01, 2017" />
+
+            <TextView
+                android:id="@+id/runtimeTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{@string/runtime_format(viewModel.movieDetail.runtime)}"
+                android:textColor="@android:color/black"
+                android:visibility="@{viewModel.movieDetail.runtime == 0 ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="@+id/releaseDateTV"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/releaseDateTV"
+                app:layout_constraintTop_toTopOf="@+id/releaseDateTV"
+                tools:text="156 minutes" />
+
+            <android.support.v7.widget.AppCompatRatingBar
+                android:id="@+id/voteAverage"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fm_10dp"
+                android:numStars="10"
+                android:stepSize="0.1"
+                android:visibility="@{viewModel.detailsVisibility}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/background"
+                app:setRating="@{viewModel.movieDetail.voteAverage}"
+                tools:text="vote average" />
+
+            <TextView
+                android:id="@+id/overview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/fm_10dp"
+                android:text="@{viewModel.movieDetail.overview}"
+                android:textColor="@android:color/black"
+                android:visibility="@{viewModel.detailsVisibility}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/voteAverage"
+                tools:text="overview text" />
+
+            <include
+                layout="@layout/no_internet_connection_layout"
+                bind:visibility="@{viewModel.noInternetVisibility}" />
+
+            <TextView
+                android:id="@+id/retrieveFailure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/unable_to_retrieve_data"
+                android:textColor="@android:color/black"
+                android:visibility="@{viewModel.retrievalFailureMsgVisibility}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="@{viewModel.progressbarVisibility}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</layout>
