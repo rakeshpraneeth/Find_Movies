@@ -70,10 +70,13 @@ public class TrailerItemViewModel extends RowViewModel {
 
     public void onTrailerItemClick(View view, String key) {
         if (view !=null && key != null && !key.isEmpty()) {
+
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(YOUTUBE_URL + key));
-            view.getContext().startActivity(intent);
 
+            if(intent.resolveActivity(view.getContext().getPackageManager()) !=null) {
+                view.getContext().startActivity(intent);
+            }
         }
     }
 }

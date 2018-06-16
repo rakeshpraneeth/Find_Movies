@@ -31,9 +31,7 @@
 
         <View
             android:id="@+id/background"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@android:color/darker_gray"
+            style="@style/backgroundStyle"
             app:layout_constraintBottom_toBottomOf="@+id/posterPathIV"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

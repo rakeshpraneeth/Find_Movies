@@ -12,7 +12,7 @@ public final class FragmentUtils {
 
     public static void replaceFragment(Context context, int containerId, Fragment fragment){
         AppCompatActivity appCompatActivity = (AppCompatActivity) context;
-        if(fragment !=null) {
+        if(appCompatActivity  !=null  && fragment !=null) {
             appCompatActivity.getSupportFragmentManager().beginTransaction()
                     .replace(containerId, fragment)
                     .commit();

@@ -33,14 +33,13 @@
 
         <include
             layout="@layout/no_internet_connection_layout"
-            bind:visibility="@{viewModel.noInternetVisibility}" />
+            bind:visibility="@{viewModel.noInternetVisibility}"
+            tools:visibility="gone" />
 
         <TextView
             android:id="@+id/retrieveFailure"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/errorTvStyle"
             android:text="@string/unable_to_retrieve_data"
-            android:textColor="@android:color/black"
             android:visibility="@{viewModel.retrievalFailureMsgVisibility}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

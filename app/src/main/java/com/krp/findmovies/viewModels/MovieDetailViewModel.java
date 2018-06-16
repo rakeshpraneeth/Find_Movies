@@ -14,6 +14,7 @@ import com.krp.findmovies.interfaces.FmApiService;
 import com.krp.findmovies.model.MovieDetail;
 import com.krp.findmovies.utilities.FragmentUtils;
 import com.krp.findmovies.utilities.NetworkHandler;
+import com.krp.findmovies.views.fragments.MovieReviewsFragment;
 import com.krp.findmovies.views.fragments.MovieTrailersFragment;
 import com.squareup.picasso.Picasso;
 
@@ -90,6 +91,7 @@ public class MovieDetailViewModel {
                     movieDetail.set(response.body());
                     detailsVisibility.set(View.VISIBLE);
                     FragmentUtils.replaceFragment(context, R.id.movieTrailersFL, MovieTrailersFragment.newInstance(movieId));
+                    FragmentUtils.replaceFragment(context, R.id.movieReviewsFL, MovieReviewsFragment.newInstance(movieId));
                 }
                 progressbarVisibility.set(View.GONE);
             }
