@@ -1,6 +1,8 @@
 package com.krp.findmovies.viewModels;
 
 import android.content.Context;
+import android.databinding.ObservableInt;
+import android.view.View;
 
 import com.krp.findmovies.R;
 import com.krp.findmovies.adapters.MoviesAdapter;
@@ -22,11 +24,23 @@ public class MovieTrailersViewModel {
     private FmApiService fmApiService;
     private Context context;
     private MoviesAdapter adapter;
+    private ObservableInt progressbarVisibility;
+    private ObservableInt noTrailersTvVisibility;
 
     public MovieTrailersViewModel(Context context, int movieId) {
         this.movieId = movieId;
         this.context = context;
+        progressbarVisibility = new ObservableInt(View.VISIBLE);
+        noTrailersTvVisibility = new ObservableInt(View.GONE);
         fetchMovieTrailers();
+    }
+
+    public ObservableInt getProgressbarVisibility() {
+        return progressbarVisibility;
+    }
+
+    public ObservableInt getNoTrailersTvVisibility() {
+        return noTrailersTvVisibility;
     }
 
     public void setAdapter(MoviesAdapter adapter) {
@@ -44,12 +58,19 @@ public class MovieTrailersViewModel {
             @Override
             public void onResponse(Call<Trailers> call, Response<Trailers> response) {
                 if (response.isSuccessful()) {
-                    updateList(response.body().getResults());
+
+                    if (response.body().getResults().size() > 0) {
+                        updateList(response.body().getResults());
+                    } else {
+                        noTrailersTvVisibility.set(View.VISIBLE);
+                    }
                 }
+                progressbarVisibility.set(View.GONE);
             }
 
             @Override
             public void onFailure(Call<Trailers> call, Throwable t) {
+                progressbarVisibility.set(View.GONE);
             }
         });
     }

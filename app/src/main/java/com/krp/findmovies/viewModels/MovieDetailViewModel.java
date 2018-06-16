@@ -12,7 +12,9 @@ import com.krp.findmovies.R;
 import com.krp.findmovies.common.BaseUrl;
 import com.krp.findmovies.interfaces.FmApiService;
 import com.krp.findmovies.model.MovieDetail;
+import com.krp.findmovies.utilities.FragmentUtils;
 import com.krp.findmovies.utilities.NetworkHandler;
+import com.krp.findmovies.views.fragments.MovieTrailersFragment;
 import com.squareup.picasso.Picasso;
 
 import retrofit2.Call;
@@ -32,7 +34,7 @@ public class MovieDetailViewModel {
     private Context context;
     private FmApiService fmApiService;
 
-    public MovieDetailViewModel(Context context){
+    public MovieDetailViewModel(Context context) {
         this.context = context;
 
         movieDetail = new ObservableField<>();
@@ -72,9 +74,9 @@ public class MovieDetailViewModel {
 
     }
 
-    private void makeServiceCall(int movieId){
+    private void makeServiceCall(final int movieId) {
 
-        if(fmApiService == null){
+        if (fmApiService == null) {
             fmApiService = BaseUrl.getFmApiService();
         }
 
@@ -84,9 +86,10 @@ public class MovieDetailViewModel {
             @Override
             public void onResponse(Call<MovieDetail> call, Response<MovieDetail> response) {
 
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     movieDetail.set(response.body());
                     detailsVisibility.set(View.VISIBLE);
+                    FragmentUtils.replaceFragment(context, R.id.movieTrailersFL, MovieTrailersFragment.newInstance(movieId));
                 }
                 progressbarVisibility.set(View.GONE);
             }
@@ -112,10 +115,10 @@ public class MovieDetailViewModel {
     }
 
     @BindingAdapter("setRating")
-    public static void setRating(AppCompatRatingBar appCompatRatingBar, double voteAverage){
+    public static void setRating(AppCompatRatingBar appCompatRatingBar, double voteAverage) {
 
-        if(appCompatRatingBar !=null){
-            appCompatRatingBar.setRating((float)voteAverage);
+        if (appCompatRatingBar != null) {
+            appCompatRatingBar.setRating((float) voteAverage);
         }
     }
 }

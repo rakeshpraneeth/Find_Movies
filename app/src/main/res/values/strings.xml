@@ -13,4 +13,7 @@
 
     <string name="posterImage">posterImage</string>
     <string name="backdropImage">backdropImage</string>
+
+    <string name="trailers">Trailers</string>
+    <string name="no_trailers_available">No Trailers Available</string>
 </resources>

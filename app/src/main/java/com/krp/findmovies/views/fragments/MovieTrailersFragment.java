@@ -50,6 +50,7 @@ public class MovieTrailersFragment extends Fragment {
             viewModel = new MovieTrailersViewModel(getContext(), movieId);
             adapter = new MoviesAdapter();
             viewModel.setAdapter(adapter);
+            binding.setViewModel(viewModel);
             initializeRv();
         }
     }
