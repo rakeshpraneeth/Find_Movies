@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="item"
+            type="com.krp.findmovies.viewModels.TrailerItemViewModel" />
+
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="@{v->item.onTrailerItemClick(v,item.trailer.key)}"
+        android:padding="@dimen/fm_3dp">
+
+        <ImageView
+            android:id="@+id/trailerIV"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/fm_100dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:setTrailerImage="@{item.trailer.key}" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

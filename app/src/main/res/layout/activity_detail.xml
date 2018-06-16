@@ -28,6 +28,14 @@
                 layout="@layout/movie_details_layout"
                 app:viewModel="@{viewModel}"/>
 
+            <FrameLayout
+                android:id="@+id/movieTrailersFL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/movieDetailsIncludedView"/>
+
             <include
                 layout="@layout/no_internet_connection_layout"
                 bind:visibility="@{viewModel.noInternetVisibility}" />
