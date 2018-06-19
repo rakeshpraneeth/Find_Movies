@@ -1,6 +1,6 @@
 package com.krp.findmovies.interfaces;
 
-import com.krp.findmovies.model.MovieDetail;
+import com.krp.findmovies.model.Movie;
 import com.krp.findmovies.model.MoviesResponse;
 import com.krp.findmovies.model.Reviews;
 import com.krp.findmovies.model.Trailers;
@@ -24,8 +24,8 @@ public interface FmApiService {
     Call<MoviesResponse> getMoviesList(@Path(value = "movieType", encoded = true) String movieType, @Query("api_key") String apiKey);
 
     @GET("3/movie/{movieId}")
-    Call<MovieDetail> getMovieDetail(@Path(value = "movieId") int movieId,
-                                     @Query("api_key") String apiKey);
+    Call<Movie> getMovieDetail(@Path(value = "movieId") int movieId,
+                               @Query("api_key") String apiKey);
 
     @GET("3/movie/{movieId}/videos")
     Call<Trailers> getTrailers(@Path("movieId") int movieId, @Query("api_key") String apiKey);

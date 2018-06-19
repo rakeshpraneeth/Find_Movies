@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import com.krp.findmovies.R;
 import com.krp.findmovies.common.BaseUrl;
 import com.krp.findmovies.interfaces.FmApiService;
-import com.krp.findmovies.model.MovieDetail;
+import com.krp.findmovies.model.Movie;
 import com.krp.findmovies.utilities.FragmentUtils;
 import com.krp.findmovies.utilities.NetworkHandler;
 import com.krp.findmovies.views.fragments.MovieReviewsFragment;
@@ -26,7 +26,7 @@ public class MovieDetailViewModel {
 
     private static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w185/";
 
-    private ObservableField<MovieDetail> movieDetail;
+    private ObservableField<Movie> movie;
     private ObservableInt progressbarVisibility;
     private ObservableInt noInternetVisibility;
     private ObservableInt retrievalFailureMsgVisibility;
@@ -38,7 +38,7 @@ public class MovieDetailViewModel {
     public MovieDetailViewModel(Context context) {
         this.context = context;
 
-        movieDetail = new ObservableField<>();
+        movie = new ObservableField<>();
         progressbarVisibility = new ObservableInt(View.VISIBLE);
         noInternetVisibility = new ObservableInt(View.GONE);
         retrievalFailureMsgVisibility = new ObservableInt(View.GONE);
@@ -57,8 +57,8 @@ public class MovieDetailViewModel {
         return retrievalFailureMsgVisibility;
     }
 
-    public ObservableField<MovieDetail> getMovieDetail() {
-        return movieDetail;
+    public ObservableField<Movie> getMovie() {
+        return movie;
     }
 
     public ObservableInt getDetailsVisibility() {
@@ -81,14 +81,14 @@ public class MovieDetailViewModel {
             fmApiService = BaseUrl.getFmApiService();
         }
 
-        Call<MovieDetail> call = fmApiService.getMovieDetail(movieId, context.getString(R.string.api_key));
+        Call<Movie> call = fmApiService.getMovieDetail(movieId, context.getString(R.string.api_key));
 
-        call.enqueue(new Callback<MovieDetail>() {
+        call.enqueue(new Callback<Movie>() {
             @Override
-            public void onResponse(Call<MovieDetail> call, Response<MovieDetail> response) {
+            public void onResponse(Call<Movie> call, Response<Movie> response) {
 
                 if (response.isSuccessful()) {
-                    movieDetail.set(response.body());
+                    movie.set(response.body());
                     detailsVisibility.set(View.VISIBLE);
                     FragmentUtils.replaceFragment(context, R.id.movieTrailersFL, MovieTrailersFragment.newInstance(movieId));
                     FragmentUtils.replaceFragment(context, R.id.movieReviewsFL, MovieReviewsFragment.newInstance(movieId));
@@ -97,7 +97,7 @@ public class MovieDetailViewModel {
             }
 
             @Override
-            public void onFailure(Call<MovieDetail> call, Throwable t) {
+            public void onFailure(Call<Movie> call, Throwable t) {
 
                 retrievalFailureMsgVisibility.set(View.VISIBLE);
                 progressbarVisibility.set(View.GONE);

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="android.view.View" />
 
         <variable
@@ -27,7 +28,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:setDetailImage="@{viewModel.movieDetail.backdropPath}" />
+            app:setDetailImage="@{viewModel.movie.backdropPath}" />
 
         <View
             android:id="@+id/background"
@@ -43,14 +44,14 @@
             android:layout_height="@dimen/fm_150dp"
             android:layout_marginLeft="@dimen/fm_20dp"
             android:layout_marginStart="@dimen/fm_20dp"
+            android:contentDescription="@string/posterImage"
             android:scaleType="centerCrop"
             android:src="@drawable/placeholder"
-            android:contentDescription="@string/posterImage"
             app:layout_constraintBottom_toBottomOf="@+id/backdropIV"
             app:layout_constraintDimensionRatio="w,2:3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/backdropIV"
-            app:setDetailImage="@{viewModel.movieDetail.posterPath}" />
+            app:setDetailImage="@{viewModel.movie.posterPath}" />
 
         <TextView
             android:id="@+id/entertainmentTitle"
@@ -58,7 +59,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/fm_10dp"
             android:singleLine="true"
-            android:text="@{viewModel.movieDetail.originalTitle}"
+            android:text="@{viewModel.movie.originalTitle}"
             android:textColor="@android:color/black"
             android:textSize="@dimen/fm_20sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -70,7 +71,7 @@
             android:id="@+id/releaseDateTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.movieDetail.releaseDate}"
+            android:text="@{viewModel.movie.releaseDate}"
             android:textColor="@android:color/black"
             app:layout_constraintEnd_toStartOf="@+id/runtimeTV"
             app:layout_constraintHorizontal_chainStyle="spread"
@@ -82,14 +83,14 @@
             android:id="@+id/runtimeTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{@string/runtime_format(viewModel.movieDetail.runtime)}"
+            android:text="@{@string/runtime_format(viewModel.movie.runtime)}"
             android:textColor="@android:color/black"
-            android:visibility="@{viewModel.movieDetail.runtime == 0 ? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.movie.runtime == 0 ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="@+id/releaseDateTV"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/favouriteBtn"
             app:layout_constraintStart_toEndOf="@+id/releaseDateTV"
             app:layout_constraintTop_toTopOf="@+id/releaseDateTV"
-            tools:text="156 minutes" />
+            tools:text="156 min" />
 
         <android.support.v7.widget.AppCompatRatingBar
             android:id="@+id/voteAverage"
@@ -102,7 +103,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/background"
-            app:setRating="@{viewModel.movieDetail.voteAverage}"
+            app:setRating="@{viewModel.movie.voteAverage}"
             tools:text="vote average" />
 
         <TextView
@@ -110,12 +111,22 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fm_10dp"
-            android:text="@{viewModel.movieDetail.overview}"
+            android:text="@{viewModel.movie.overview}"
             android:textColor="@android:color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/voteAverage"
             tools:text="overview text" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/favouriteBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/fm_20dp"
+            android:src="@{viewModel.movie.isFavourite ? @android:drawable/star_big_on : @android:drawable/star_big_off}"
+            app:layout_constraintBottom_toBottomOf="@+id/background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/background" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>
