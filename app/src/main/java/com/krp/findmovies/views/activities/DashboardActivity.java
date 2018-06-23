@@ -17,6 +17,7 @@ public class DashboardActivity extends AppCompatActivity {
     ActivityDashboardBinding binding;
     MoviesAdapter adapter;
     MoviesListViewModel viewModel;
+    private boolean isShowingFavourites;
 
     private static final String POPULAR_MOVIES = "movie/popular";
     private static final String TOP_RATED_MOVIES = "movie/top_rated";
@@ -28,12 +29,21 @@ public class DashboardActivity extends AppCompatActivity {
 
         adapter = new MoviesAdapter();
         viewModel = new MoviesListViewModel(this);
+
         viewModel.setAdapter(adapter);
-        viewModel.fetchData(POPULAR_MOVIES);
+        getMovies(true);
         setTitle(getString(R.string.popular));
 
         loadMoviesList();
         binding.setViewModel(viewModel);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(isShowingFavourites){
+            getFavourites();
+        }
     }
 
     @Override
@@ -47,20 +57,38 @@ public class DashboardActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.popular:
                 setTitle(item.getTitle());
-                if (viewModel != null) {
-                    viewModel.fetchData(POPULAR_MOVIES);
-                }
+                isShowingFavourites = false;
+                getMovies(true);
                 break;
 
             case R.id.topRated:
                 setTitle(item.getTitle());
-                if (viewModel != null) {
-                    viewModel.fetchData(TOP_RATED_MOVIES);
-                }
+                isShowingFavourites = false;
+                getMovies(false);
                 break;
-
+            case R.id.favourite:
+                setTitle(item.getTitle());
+                getFavourites();
+                break;
         }
         return true;
+    }
+
+    private void getMovies(boolean isPopularMovies){
+        if(viewModel !=null){
+            if(isPopularMovies){
+                viewModel.fetchData(POPULAR_MOVIES);
+            }else{
+                viewModel.fetchData(TOP_RATED_MOVIES);
+            }
+        }
+    }
+
+    private void getFavourites(){
+        isShowingFavourites = true;
+        if(viewModel !=null){
+            viewModel.fetchFavourites();
+        }
     }
 
     private void loadMoviesList() {

@@ -35,4 +35,5 @@ ext {
     espressoVersion = '3.0.2'
     retrofitVersion = '2.3.0'
     picassoVersion = '2.5.2'
+    roomVersion = '1.0.0'
 }

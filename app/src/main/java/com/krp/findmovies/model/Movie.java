@@ -1,15 +1,21 @@
 package com.krp.findmovies.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Movie implements Parcelable {
+@Entity
+public final class Movie implements Parcelable {
+
+    @PrimaryKey
+    private int id;
 
     @SerializedName("vote_count")
     private int voteCount;
-    private int id;
+
     private boolean video;
     @SerializedName("vote_average")
     private double voteAverage;
@@ -81,6 +87,66 @@ public class Movie implements Parcelable {
         return overview;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setVoteCount(int voteCount) {
+        this.voteCount = voteCount;
+    }
+
+    public void setVideo(boolean video) {
+        this.video = video;
+    }
+
+    public void setVoteAverage(double voteAverage) {
+        this.voteAverage = voteAverage;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setPopularity(double popularity) {
+        this.popularity = popularity;
+    }
+
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
+    }
+
+    public void setOriginalLanguage(String originalLanguage) {
+        this.originalLanguage = originalLanguage;
+    }
+
+    public void setOriginalTitle(String originalTitle) {
+        this.originalTitle = originalTitle;
+    }
+
+    public void setBackdropPath(String backdropPath) {
+        this.backdropPath = backdropPath;
+    }
+
+    public void setAdult(boolean adult) {
+        this.adult = adult;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public void setRuntime(int runtime) {
+        this.runtime = runtime;
+    }
+
+    public void setFavourite(boolean favourite) {
+        isFavourite = favourite;
+    }
+
     public String getReleaseDate() {
         return releaseDate;
     }
@@ -100,8 +166,8 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.voteCount);
         dest.writeInt(this.id);
+        dest.writeInt(this.voteCount);
         dest.writeByte(this.video ? (byte) 1 : (byte) 0);
         dest.writeDouble(this.voteAverage);
         dest.writeString(this.title);
@@ -118,8 +184,8 @@ public class Movie implements Parcelable {
     }
 
     protected Movie(Parcel in) {
-        this.voteCount = in.readInt();
         this.id = in.readInt();
+        this.voteCount = in.readInt();
         this.video = in.readByte() != 0;
         this.voteAverage = in.readDouble();
         this.title = in.readString();
@@ -135,7 +201,7 @@ public class Movie implements Parcelable {
         this.isFavourite = in.readByte() != 0;
     }
 
-    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
         @Override
         public Movie createFromParcel(Parcel source) {
             return new Movie(source);

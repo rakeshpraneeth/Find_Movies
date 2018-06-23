@@ -2,6 +2,7 @@ package com.krp.findmovies.viewModels;
 
 import android.content.Context;
 import android.databinding.BindingAdapter;
+import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.support.v7.widget.AppCompatRatingBar;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 
 import com.krp.findmovies.R;
 import com.krp.findmovies.common.BaseUrl;
+import com.krp.findmovies.database.AppDatabase;
 import com.krp.findmovies.interfaces.FmApiService;
 import com.krp.findmovies.model.Movie;
 import com.krp.findmovies.utilities.FragmentUtils;
@@ -31,9 +33,12 @@ public class MovieDetailViewModel {
     private ObservableInt noInternetVisibility;
     private ObservableInt retrievalFailureMsgVisibility;
     private ObservableInt detailsVisibility;
+    private ObservableBoolean isFavourite;
 
     private Context context;
     private FmApiService fmApiService;
+
+    private AppDatabase mAppDatabase;
 
     public MovieDetailViewModel(Context context) {
         this.context = context;
@@ -43,6 +48,9 @@ public class MovieDetailViewModel {
         noInternetVisibility = new ObservableInt(View.GONE);
         retrievalFailureMsgVisibility = new ObservableInt(View.GONE);
         detailsVisibility = new ObservableInt(View.GONE);
+        isFavourite = new ObservableBoolean(false);
+
+        mAppDatabase = AppDatabase.getInstance(context);
     }
 
     public ObservableInt getProgressbarVisibility() {
@@ -63,6 +71,10 @@ public class MovieDetailViewModel {
 
     public ObservableInt getDetailsVisibility() {
         return detailsVisibility;
+    }
+
+    public ObservableBoolean getIsFavourite() {
+        return isFavourite;
     }
 
     public void fetchData(int movieId) {
@@ -89,6 +101,7 @@ public class MovieDetailViewModel {
 
                 if (response.isSuccessful()) {
                     movie.set(response.body());
+                    checkIfSelectedMovieIsFavourite(movieId);
                     detailsVisibility.set(View.VISIBLE);
                     FragmentUtils.replaceFragment(context, R.id.movieTrailersFL, MovieTrailersFragment.newInstance(movieId));
                     FragmentUtils.replaceFragment(context, R.id.movieReviewsFL, MovieReviewsFragment.newInstance(movieId));
@@ -121,6 +134,26 @@ public class MovieDetailViewModel {
 
         if (appCompatRatingBar != null) {
             appCompatRatingBar.setRating((float) voteAverage);
+        }
+    }
+
+    private void checkIfSelectedMovieIsFavourite(int movieId) {
+        boolean value = mAppDatabase.findMoviesDao().isFavouriteMovie(movieId);
+        isFavourite.set(value);
+    }
+
+    public void onFavouriteFABClicked(View fab, boolean favouriteValue) {
+
+        if (!favouriteValue) {
+            // If it is not favourite, add to favourite.
+            movie.get().setFavourite(true);
+            isFavourite.set(true);
+            mAppDatabase.findMoviesDao().insertMovie(movie.get());
+        } else {
+            // If it is already favourite, remove from favourite.
+            movie.get().setFavourite(false);
+            isFavourite.set(false);
+            mAppDatabase.findMoviesDao().deleteMovie(movie.get());
         }
     }
 }

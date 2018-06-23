@@ -26,39 +26,38 @@
             <include
                 android:id="@+id/movieDetailsIncludedView"
                 layout="@layout/movie_details_layout"
-                app:viewModel="@{viewModel}"/>
+                app:viewModel="@{viewModel}" />
 
             <FrameLayout
                 android:id="@+id/movieTrailersFL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/movieDetailsIncludedView"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/movieDetailsIncludedView" />
 
             <FrameLayout
                 android:id="@+id/movieReviewsFL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/movieTrailersFL"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/movieTrailersFL" />
 
             <include
                 layout="@layout/no_internet_connection_layout"
                 bind:visibility="@{viewModel.noInternetVisibility}"
-                tools:visibility="gone"/>
+                tools:visibility="gone" />
 
             <TextView
                 android:id="@+id/retrieveFailure"
-                android:text="@string/unable_to_retrieve_data"
                 style="@style/errorTvStyle"
+                android:text="@string/unable_to_retrieve_data"
                 android:visibility="@{viewModel.retrievalFailureMsgVisibility}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ProgressBar
                 android:id="@+id/progressBar"

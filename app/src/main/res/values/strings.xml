@@ -4,6 +4,7 @@
     <string name="sort">sort</string>
     <string name="popular">Popular Movies</string>
     <string name="topRated">Top Rated Movies</string>
+    <string name="favourite">Favourite Movies</string>
 
     <string name="runtime_format">%d min</string>
 

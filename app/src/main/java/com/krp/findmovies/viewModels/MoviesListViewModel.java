@@ -7,6 +7,7 @@ import android.view.View;
 import com.krp.findmovies.R;
 import com.krp.findmovies.adapters.MoviesAdapter;
 import com.krp.findmovies.common.BaseUrl;
+import com.krp.findmovies.database.AppDatabase;
 import com.krp.findmovies.interfaces.FmApiService;
 import com.krp.findmovies.model.Movie;
 import com.krp.findmovies.model.MoviesResponse;
@@ -33,12 +34,16 @@ public class MoviesListViewModel {
 
     private String path;
 
+    private AppDatabase mAppDatabase;
+
     public MoviesListViewModel(Context context){
         this.context = context;
         progressbarVisibility = new ObservableInt(View.VISIBLE);
         noInternetVisibility = new ObservableInt(View.GONE);
         recyclerViewVisibility = new ObservableInt(View.GONE);
         retrievalFailureMsgVisibility = new ObservableInt(View.GONE);
+
+        mAppDatabase = AppDatabase.getInstance(context);
     }
 
     public ObservableInt getProgressbarVisibility() {
@@ -88,7 +93,7 @@ public class MoviesListViewModel {
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
                 if(response.isSuccessful()){
 
-                    updateList(response.body());
+                    updateList(response.body().getResults());
                 }
                 progressbarVisibility.set(View.GONE);
             }
@@ -103,10 +108,18 @@ public class MoviesListViewModel {
         });
     }
 
-    private void updateList(MoviesResponse moviesResponse){
+    public void fetchFavourites(){
+
+        updateList(mAppDatabase.findMoviesDao().getMovies());
+        retrievalFailureMsgVisibility.set(View.GONE);
+        progressbarVisibility.set(View.GONE);
+        noInternetVisibility.set(View.GONE);
+    }
+
+    private void updateList(List<Movie> movieList){
 
         List<RowViewModel> list = new ArrayList<>();
-        for(Movie movie: moviesResponse.getResults()){
+        for(Movie movie: movieList){
             list.add(new MovieItemViewModel(movie));
         }
         adapter.setList(list);
