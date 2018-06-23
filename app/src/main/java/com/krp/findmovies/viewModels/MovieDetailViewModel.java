@@ -14,6 +14,7 @@ import com.krp.findmovies.common.BaseUrl;
 import com.krp.findmovies.database.AppDatabase;
 import com.krp.findmovies.interfaces.FmApiService;
 import com.krp.findmovies.model.Movie;
+import com.krp.findmovies.utilities.FindMoviesExecutors;
 import com.krp.findmovies.utilities.FragmentUtils;
 import com.krp.findmovies.utilities.NetworkHandler;
 import com.krp.findmovies.views.fragments.MovieReviewsFragment;
@@ -137,9 +138,15 @@ public class MovieDetailViewModel {
         }
     }
 
-    private void checkIfSelectedMovieIsFavourite(int movieId) {
-        boolean value = mAppDatabase.findMoviesDao().isFavouriteMovie(movieId);
-        isFavourite.set(value);
+    private void checkIfSelectedMovieIsFavourite(final int movieId) {
+        FindMoviesExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                boolean value = mAppDatabase.findMoviesDao().isFavouriteMovie(movieId);
+                isFavourite.set(value);
+            }
+        });
+
     }
 
     public void onFavouriteFABClicked(View fab, boolean favouriteValue) {
@@ -148,12 +155,25 @@ public class MovieDetailViewModel {
             // If it is not favourite, add to favourite.
             movie.get().setFavourite(true);
             isFavourite.set(true);
-            mAppDatabase.findMoviesDao().insertMovie(movie.get());
+            performMovieOperation(false);
         } else {
             // If it is already favourite, remove from favourite.
             movie.get().setFavourite(false);
             isFavourite.set(false);
-            mAppDatabase.findMoviesDao().deleteMovie(movie.get());
+            performMovieOperation(true);
         }
+    }
+
+    private void performMovieOperation(final boolean isDeletingMovie) {
+        FindMoviesExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                if (isDeletingMovie) {
+                    mAppDatabase.findMoviesDao().deleteMovie(movie.get());
+                } else {
+                    mAppDatabase.findMoviesDao().insertMovie(movie.get());
+                }
+            }
+        });
     }
 }

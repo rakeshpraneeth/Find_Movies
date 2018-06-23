@@ -36,4 +36,5 @@ ext {
     retrofitVersion = '2.3.0'
     picassoVersion = '2.5.2'
     roomVersion = '1.0.0'
+    archLifecycleVersion='1.1.0'
 }

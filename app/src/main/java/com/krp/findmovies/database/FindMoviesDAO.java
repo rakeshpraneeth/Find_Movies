@@ -1,5 +1,6 @@
 package com.krp.findmovies.database;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -14,13 +15,13 @@ import java.util.List;
 public interface FindMoviesDAO {
 
     @Query("SELECT * FROM movie")
-    List<Movie> getMovies();
+    LiveData<List<Movie>> getMovies();
 
     @Query("SELECT isFavourite FROM movie WHERE id = :movieId")
     boolean isFavouriteMovie(int movieId);
 
     @Query("SELECT * FROM movie WHERE id = :movieId")
-    Movie getMovie(int movieId);
+    Movie getMovieById(int movieId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMovie(Movie movie);
