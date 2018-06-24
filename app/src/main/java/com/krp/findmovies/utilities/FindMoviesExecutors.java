@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+// This class is used to perform the operations on the separate thread.
 public final class FindMoviesExecutors {
 
     private static final Object LOCK = new Object();
