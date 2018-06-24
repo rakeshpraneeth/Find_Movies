@@ -19,6 +19,7 @@ import com.krp.findmovies.viewModels.MovieTrailersViewModel;
 public class MovieTrailersFragment extends Fragment {
 
     private static final String MOVIE_ID = "MovieId";
+    private static final String VIEW_MODEL = "viewModel";
 
     FragmentMovieTrailersBinding binding;
     MovieTrailersViewModel viewModel;
@@ -45,14 +46,26 @@ public class MovieTrailersFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        int movieId = getMovieId();
-        if (movieId != -1) {
-            viewModel = new MovieTrailersViewModel(getContext(), movieId);
-            adapter = new MoviesAdapter();
-            viewModel.setAdapter(adapter);
-            binding.setViewModel(viewModel);
-            initializeRv();
+        adapter = new MoviesAdapter();
+
+        if(savedInstanceState == null) {
+            int movieId = getMovieId();
+            if (movieId != -1) {
+                viewModel = new MovieTrailersViewModel(getContext(), movieId);
+            }
+        }else{
+            viewModel = savedInstanceState.getParcelable(VIEW_MODEL);
+            adapter.setList(viewModel.getTrailersAdapterList());
         }
+        viewModel.setAdapter(adapter);
+        initializeRv();
+        binding.setViewModel(viewModel);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(VIEW_MODEL,viewModel);
     }
 
     private void initializeRv() {

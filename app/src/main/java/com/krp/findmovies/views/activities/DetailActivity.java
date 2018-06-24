@@ -3,31 +3,40 @@ package com.krp.findmovies.views.activities;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
 import com.krp.findmovies.R;
 import com.krp.findmovies.databinding.ActivityDetailBinding;
+import com.krp.findmovies.model.Movie;
 import com.krp.findmovies.viewModels.MovieDetailViewModel;
 
 public class DetailActivity extends AppCompatActivity {
 
     ActivityDetailBinding binding;
-    public static final String MOVIE_ID = "movieId";
+    public static final String MOVIE = "movie";
+    public static final String VIEW_MODEL = "viewModel";
+    private MovieDetailViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
-        int movieId = getIntent().getIntExtra(MOVIE_ID, -1);
-        if (movieId != -1) {
-            MovieDetailViewModel viewModel = new MovieDetailViewModel(this);
-            viewModel.fetchData(movieId);
-            binding.setViewModel(viewModel);
-
+        if (savedInstanceState == null) {
+            Movie movie = getIntent().getParcelableExtra(MOVIE);
+            if (movie != null) {
+                if (viewModel == null) {
+                    viewModel = new MovieDetailViewModel(this, movie.getId());
+                }
+            }
         } else {
-            Toast.makeText(this, getString(R.string.need_a_movie_id), Toast.LENGTH_SHORT).show();
+            viewModel = savedInstanceState.getParcelable(VIEW_MODEL);
         }
+        binding.setViewModel(viewModel);
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(VIEW_MODEL, viewModel);
+    }
 }

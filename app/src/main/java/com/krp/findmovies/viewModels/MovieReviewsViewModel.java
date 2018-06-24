@@ -2,6 +2,8 @@ package com.krp.findmovies.viewModels;
 
 import android.content.Context;
 import android.databinding.ObservableInt;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.View;
 
 import com.krp.findmovies.R;
@@ -18,7 +20,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MovieReviewsViewModel {
+public class MovieReviewsViewModel implements Parcelable {
 
     private FmApiService fmApiService;
     private int movieId;
@@ -28,7 +30,10 @@ public class MovieReviewsViewModel {
     private ObservableInt noReviewsTvVisibility;
     private ObservableInt failureTvVisibility;
 
-    public MovieReviewsViewModel(Context context, int movieId){
+    private Reviews reviews;
+    private List<RowViewModel> reviewsAdapterList;
+
+    public MovieReviewsViewModel(Context context, int movieId) {
         this.context = context;
         this.movieId = movieId;
         progressbarVisibility = new ObservableInt(View.VISIBLE);
@@ -53,21 +58,26 @@ public class MovieReviewsViewModel {
         this.adapter = adapter;
     }
 
-    private void fetchMovieReviews(){
+    public List<RowViewModel> getReviewsAdapterList() {
+        return reviewsAdapterList;
+    }
 
-        if(fmApiService == null){
+    private void fetchMovieReviews() {
+
+        if (fmApiService == null) {
             fmApiService = BaseUrl.getFmApiService();
         }
 
-        Call<Reviews> call = fmApiService.getReviews(movieId,context.getString(R.string.api_key));
+        Call<Reviews> call = fmApiService.getReviews(movieId, context.getString(R.string.api_key));
         call.enqueue(new Callback<Reviews>() {
             @Override
             public void onResponse(Call<Reviews> call, Response<Reviews> response) {
 
-                if(response.isSuccessful()){
-                    if(response.body().getResults().size() > 0) {
-                        updateList(response.body().getResults());
-                    }else{
+                if (response.isSuccessful()) {
+                    reviews = response.body();
+                    if (reviews.getResults().size() > 0) {
+                        updateList(reviews.getResults());
+                    } else {
                         noReviewsTvVisibility.set(View.VISIBLE);
                     }
                 }
@@ -82,13 +92,45 @@ public class MovieReviewsViewModel {
         });
     }
 
-    private void updateList(List<Review> reviews){
-        List<RowViewModel> list = new ArrayList<>();
-        for(Review review: reviews){
-            list.add(new ReviewItemViewModel(review));
+    private void updateList(List<Review> reviews) {
+        reviewsAdapterList = new ArrayList<>();
+        for (Review review : reviews) {
+            reviewsAdapterList.add(new ReviewItemViewModel(review));
         }
-        if(adapter !=null){
-            adapter.setList(list);
+        if (adapter != null) {
+            adapter.setList(reviewsAdapterList);
         }
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.movieId);
+        dest.writeParcelable(this.progressbarVisibility, flags);
+        dest.writeParcelable(this.noReviewsTvVisibility, flags);
+        dest.writeParcelable(this.failureTvVisibility, flags);
+    }
+
+    protected MovieReviewsViewModel(Parcel in) {
+        this.movieId = in.readInt();
+        this.progressbarVisibility = in.readParcelable(ObservableInt.class.getClassLoader());
+        this.noReviewsTvVisibility = in.readParcelable(ObservableInt.class.getClassLoader());
+        this.failureTvVisibility = in.readParcelable(ObservableInt.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<MovieReviewsViewModel> CREATOR = new Parcelable.Creator<MovieReviewsViewModel>() {
+        @Override
+        public MovieReviewsViewModel createFromParcel(Parcel source) {
+            return new MovieReviewsViewModel(source);
+        }
+
+        @Override
+        public MovieReviewsViewModel[] newArray(int size) {
+            return new MovieReviewsViewModel[size];
+        }
+    };
 }

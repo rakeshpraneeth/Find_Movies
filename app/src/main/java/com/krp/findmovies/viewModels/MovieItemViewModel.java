@@ -67,11 +67,11 @@ public class MovieItemViewModel extends RowViewModel {
         }
     }
 
-    public void onMovieItemClick(View view, int movieId){
+    public void onMovieItemClick(View view){
 
         if(view !=null){
             Intent intent = new Intent(view.getContext(), DetailActivity.class);
-            intent.putExtra(DetailActivity.MOVIE_ID,movieId);
+            intent.putExtra(DetailActivity.MOVIE,movie);
             view.getContext().startActivity(intent);
         }
     }

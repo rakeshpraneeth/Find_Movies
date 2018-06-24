@@ -2,6 +2,8 @@ package com.krp.findmovies.viewModels;
 
 import android.content.Context;
 import android.databinding.ObservableInt;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.View;
 
 import com.krp.findmovies.R;
@@ -18,7 +20,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MovieTrailersViewModel {
+public class MovieTrailersViewModel implements Parcelable {
 
     private int movieId;
     private FmApiService fmApiService;
@@ -27,6 +29,9 @@ public class MovieTrailersViewModel {
     private ObservableInt progressbarVisibility;
     private ObservableInt noTrailersTvVisibility;
     private ObservableInt failureTvVisibility;
+
+    private Trailers trailers;
+    List<RowViewModel> trailersAdapterList;
 
     public MovieTrailersViewModel(Context context, int movieId) {
         this.movieId = movieId;
@@ -53,6 +58,10 @@ public class MovieTrailersViewModel {
         this.adapter = adapter;
     }
 
+    public List<RowViewModel> getTrailersAdapterList() {
+        return trailersAdapterList;
+    }
+
     private void fetchMovieTrailers() {
 
         if (fmApiService == null) {
@@ -64,9 +73,9 @@ public class MovieTrailersViewModel {
             @Override
             public void onResponse(Call<Trailers> call, Response<Trailers> response) {
                 if (response.isSuccessful()) {
-
-                    if (response.body().getResults().size() > 0) {
-                        updateList(response.body().getResults());
+                    trailers = response.body();
+                    if (trailers.getResults().size() > 0) {
+                        updateList(trailers.getResults());
                     } else {
                         noTrailersTvVisibility.set(View.VISIBLE);
                     }
@@ -82,14 +91,51 @@ public class MovieTrailersViewModel {
         });
     }
 
-    private void updateList(List<Trailer> trailers) {
-        List<RowViewModel> list = new ArrayList<>();
+    public void updateList(List<Trailer> trailers) {
+         trailersAdapterList = new ArrayList<>();
         for (Trailer trailer : trailers) {
-            list.add(new TrailerItemViewModel(trailer));
+            trailersAdapterList.add(new TrailerItemViewModel(trailer));
         }
 
         if (adapter != null) {
-            adapter.setList(list);
+            adapter.setList(trailersAdapterList);
         }
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.movieId);
+        dest.writeParcelable(this.progressbarVisibility, flags);
+        dest.writeParcelable(this.noTrailersTvVisibility, flags);
+        dest.writeParcelable(this.failureTvVisibility, flags);
+        dest.writeParcelable(this.trailers, flags);
+    }
+
+    protected MovieTrailersViewModel(Parcel in) {
+        this.movieId = in.readInt();
+        this.fmApiService = in.readParcelable(FmApiService.class.getClassLoader());
+        this.context = in.readParcelable(Context.class.getClassLoader());
+        this.adapter = in.readParcelable(MoviesAdapter.class.getClassLoader());
+        this.progressbarVisibility = in.readParcelable(ObservableInt.class.getClassLoader());
+        this.noTrailersTvVisibility = in.readParcelable(ObservableInt.class.getClassLoader());
+        this.failureTvVisibility = in.readParcelable(ObservableInt.class.getClassLoader());
+        this.trailers = in.readParcelable(Trailers.class.getClassLoader());
+    }
+
+    public static final Creator<MovieTrailersViewModel> CREATOR = new Creator<MovieTrailersViewModel>() {
+        @Override
+        public MovieTrailersViewModel createFromParcel(Parcel source) {
+            return new MovieTrailersViewModel(source);
+        }
+
+        @Override
+        public MovieTrailersViewModel[] newArray(int size) {
+            return new MovieTrailersViewModel[size];
+        }
+    };
 }
