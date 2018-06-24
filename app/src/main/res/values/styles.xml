@@ -14,4 +14,35 @@
         <item name="android:orientation">vertical</item>
     </style>
 
+    <style name="backgroundStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:background">@android:color/darker_gray</item>
+    </style>
+
+    <style name="errorTvStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textStyle">bold</item>
+
+    </style>
+
+    <style name="noDataAvailableTvStyle" parent="errorTvStyle">
+        <item name="android:layout_marginTop">@dimen/fm_50dp</item>
+        <item name="android:layout_marginBottom">@dimen/fm_50dp</item>
+    </style>
+
+    <style name="sectionHeadersStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="reviewItemTvStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/fm_13sp</item>
+    </style>
 </resources>

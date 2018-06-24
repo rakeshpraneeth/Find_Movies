@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="item"
+            type="com.krp.findmovies.viewModels.ReviewItemViewModel" />
+
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.constraint.Guideline
+            android:id="@+id/startGuideline"
+            style="@style/verticalGuidelineStyle"
+            app:layout_constraintGuide_percent="0.02" />
+
+        <TextView
+            android:id="@+id/reviewContent"
+            style="@style/reviewItemTvStyle"
+            android:text="@{item.review.content}"
+            android:textColor="@color/color_333333"
+            app:layout_constraintEnd_toStartOf="@+id/endGuideline"
+            app:layout_constraintStart_toEndOf="@+id/startGuideline"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Massive, epic movie. I'm so happy that Marvel is stepping up their game with their villains. For too long, MCU villains have been too bland and generic. But lately, the villains have improved with Michael Keaton's Vulture, Michael B. Jordan's Killmonger, and now James Brolin's Thanos. Thanos has appeared in several other MCU films, but he seemed rather flat in those movies. Here, he's allowed to be fully developed as a character. Especially touching is his relationship with his adoptive daughter, Gamora. It's actually surprisingly tender and moving. Thanos is the actual main focus of the film, and if he failed as a character, the entire movie wouldn't have worked. So bravo, Marvel!" />
+
+        <TextView
+            style="@style/reviewItemTvStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fm_5dp"
+            android:text="@{String.format(@string/review_by, item.review.author)}"
+            android:textColor="@color/color_666666"
+            android:textSize="@dimen/fm_13sp"
+            app:layout_constraintEnd_toStartOf="@+id/endGuideline"
+            app:layout_constraintStart_toEndOf="@+id/startGuideline"
+            app:layout_constraintTop_toBottomOf="@+id/reviewContent"
+            android:layout_marginBottom="@dimen/fm_10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="-RakeshPraneeth" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/endGuideline"
+            style="@style/verticalGuidelineStyle"
+            app:layout_constraintGuide_percent="0.98" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

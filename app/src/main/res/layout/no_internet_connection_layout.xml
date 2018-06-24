@@ -2,9 +2,10 @@
 <layout>
 
     <data>
+
         <variable
             name="visibility"
-            type="int"/>
+            type="int" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -15,12 +16,9 @@
 
         <TextView
             android:id="@+id/noInternetConnectionTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/errorTvStyle"
             android:text="@string/no_internet_connection"
-            android:textColor="@android:color/black"
             android:textSize="@dimen/fm_20sp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

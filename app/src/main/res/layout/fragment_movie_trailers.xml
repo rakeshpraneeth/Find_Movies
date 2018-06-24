@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.krp.findmovies.viewModels.MovieTrailersViewModel" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context=".views.fragments.MovieTrailersFragment">
+
+        <View
+            android:id="@+id/background"
+            style="@style/backgroundStyle"
+            app:layout_constraintBottom_toBottomOf="@+id/trailerLabelTV"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/trailerLabelTV"
+            style="@style/sectionHeadersStyle"
+            android:text="@string/trailers"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/noTrailersTV"
+            style="@style/noDataAvailableTvStyle"
+            android:text="@string/no_trailers_available"
+            android:visibility="@{viewModel.noTrailersTvVisibility}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/trailerLabelTV" />
+
+        <TextView
+            android:id="@+id/failureMsg"
+            style="@style/noDataAvailableTvStyle"
+            android:text="@string/unable_to_retrieve_data"
+            android:visibility="@{viewModel.failureTvVisibility}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/trailerLabelTV" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/movieTrailersRV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/trailerLabelTV" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.progressbarVisibility}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/trailerLabelTV" />
+
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

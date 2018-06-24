@@ -12,7 +12,7 @@
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{(v) -> item.onMovieItemClick(v,item.movie.id)}">
+        android:onClick="@{(v) -> item.onMovieItemClick(v)}">
 
         <android.support.constraint.Guideline
             android:id="@+id/startGuideline"

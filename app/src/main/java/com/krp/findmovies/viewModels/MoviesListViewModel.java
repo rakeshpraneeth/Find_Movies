@@ -1,12 +1,16 @@
 package com.krp.findmovies.viewModels;
 
+import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.databinding.ObservableInt;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.View;
 
 import com.krp.findmovies.R;
 import com.krp.findmovies.adapters.MoviesAdapter;
 import com.krp.findmovies.common.BaseUrl;
+import com.krp.findmovies.database.AppDatabase;
 import com.krp.findmovies.interfaces.FmApiService;
 import com.krp.findmovies.model.Movie;
 import com.krp.findmovies.model.MoviesResponse;
@@ -19,9 +23,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MoviesListViewModel {
+public class MoviesListViewModel implements Parcelable {
 
-    private Context context;
+    private static final String POPULAR_MOVIES = "movie/popular";
+    private static final String TOP_RATED_MOVIES = "movie/top_rated";
+
     private FmApiService fmApiService;
 
     private ObservableInt noInternetVisibility;
@@ -31,10 +37,18 @@ public class MoviesListViewModel {
 
     MoviesAdapter adapter;
 
-    private String path;
+    private AppDatabase mAppDatabase;
+    private LiveData<List<Movie>> favouriteMovies;
+    private Context context;
+
+    private List<RowViewModel> dashboardAdapterList;
 
     public MoviesListViewModel(Context context){
+
         this.context = context;
+        mAppDatabase = AppDatabase.getInstance(context);
+        dashboardAdapterList = new ArrayList<>();
+
         progressbarVisibility = new ObservableInt(View.VISIBLE);
         noInternetVisibility = new ObservableInt(View.GONE);
         recyclerViewVisibility = new ObservableInt(View.GONE);
@@ -57,17 +71,25 @@ public class MoviesListViewModel {
         return retrievalFailureMsgVisibility;
     }
 
+    public LiveData<List<Movie>> getFavouriteMovies() {
+        return favouriteMovies;
+    }
+
     public void setAdapter(MoviesAdapter adapter) {
         this.adapter = adapter;
     }
 
-    public void fetchData(String path) {
+    public List<RowViewModel> getDashboardAdapterList() {
+        return dashboardAdapterList;
+    }
+
+    private void fetchData(String path) {
         retrievalFailureMsgVisibility.set(View.GONE);
+
         if (NetworkHandler.isNetworkAvailable(context)) {
-            this.path = path;
             noInternetVisibility.set(View.GONE);
             progressbarVisibility.set(View.VISIBLE);
-            makeServiceCall();
+            makeServiceCall(path);
         } else {
             noInternetVisibility.set(View.VISIBLE);
             progressbarVisibility.set(View.GONE);
@@ -76,7 +98,7 @@ public class MoviesListViewModel {
         }
     }
 
-    private void makeServiceCall(){
+    private void makeServiceCall(String path){
         if(fmApiService == null){
             fmApiService = BaseUrl.getFmApiService();
         }
@@ -88,7 +110,7 @@ public class MoviesListViewModel {
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
                 if(response.isSuccessful()){
 
-                    updateList(response.body());
+                    updateList(response.body().getResults());
                 }
                 progressbarVisibility.set(View.GONE);
             }
@@ -103,13 +125,68 @@ public class MoviesListViewModel {
         });
     }
 
-    private void updateList(MoviesResponse moviesResponse){
+    public void fetchPopularMovies(){
+        fetchData(POPULAR_MOVIES);
+    }
 
-        List<RowViewModel> list = new ArrayList<>();
-        for(Movie movie: moviesResponse.getResults()){
-            list.add(new MovieItemViewModel(movie));
+    public void fetchTopRatedMovies(){
+        fetchData(TOP_RATED_MOVIES);
+    }
+
+    public void fetchFavourites(){
+
+        favouriteMovies = mAppDatabase.findMoviesDao().getMovies();
+    }
+
+    public void showFavourites(){
+        updateList(favouriteMovies.getValue());
+        retrievalFailureMsgVisibility.set(View.GONE);
+        progressbarVisibility.set(View.GONE);
+        noInternetVisibility.set(View.GONE);
+    }
+
+    public void updateList(List<Movie> movieList){
+
+        if(dashboardAdapterList !=null){
+            dashboardAdapterList.clear();
         }
-        adapter.setList(list);
+        for(Movie movie: movieList){
+            dashboardAdapterList.add(new MovieItemViewModel(movie));
+        }
+        adapter.setList(dashboardAdapterList);
         recyclerViewVisibility.set(View.VISIBLE);
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(this.noInternetVisibility, flags);
+        dest.writeParcelable(this.progressbarVisibility, flags);
+        dest.writeParcelable(this.recyclerViewVisibility, flags);
+        dest.writeParcelable(this.retrievalFailureMsgVisibility, flags);
+    }
+
+    protected MoviesListViewModel(Parcel in) {
+        this.noInternetVisibility = in.readParcelable(ObservableInt.class.getClassLoader());
+        this.progressbarVisibility = in.readParcelable(ObservableInt.class.getClassLoader());
+        this.recyclerViewVisibility = in.readParcelable(ObservableInt.class.getClassLoader());
+        this.retrievalFailureMsgVisibility = in.readParcelable(ObservableInt.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<MoviesListViewModel> CREATOR = new Parcelable.Creator<MoviesListViewModel>() {
+        @Override
+        public MoviesListViewModel createFromParcel(Parcel source) {
+            return new MoviesListViewModel(source);
+        }
+
+        @Override
+        public MoviesListViewModel[] newArray(int size) {
+            return new MoviesListViewModel[size];
+        }
+    };
 }

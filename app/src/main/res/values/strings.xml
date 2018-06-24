@@ -4,8 +4,9 @@
     <string name="sort">sort</string>
     <string name="popular">Popular Movies</string>
     <string name="topRated">Top Rated Movies</string>
+    <string name="favourite">Favourite Movies</string>
 
-    <string name="runtime_format">%d minutes</string>
+    <string name="runtime_format">%d min</string>
 
     <string name="no_internet_connection">No Internet Connection</string>
     <string name="unable_to_retrieve_data">Unable to retrieve data</string>
@@ -13,4 +14,12 @@
 
     <string name="posterImage">posterImage</string>
     <string name="backdropImage">backdropImage</string>
+
+    <string name="trailers">Trailers</string>
+    <string name="no_trailers_available">No Trailers Available</string>
+
+    <string name="reviews">Reviews</string>
+    <string name="no_reviews_available">No Reviews Available</string>
+    <string name="review_by">Review By : %s</string>
+
 </resources>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.krp.findmovies.viewModels.MovieDetailViewModel" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="@{viewModel.detailsVisibility}">
+
+        <ImageView
+            android:id="@+id/backdropIV"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/fm_230dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/backdropImage"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:setDetailImage="@{viewModel.movie.backdropPath}" />
+
+        <View
+            android:id="@+id/background"
+            style="@style/backgroundStyle"
+            app:layout_constraintBottom_toBottomOf="@+id/posterPathIV"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/backdropIV" />
+
+        <ImageView
+            android:id="@+id/posterPathIV"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/fm_150dp"
+            android:layout_marginStart="@dimen/fm_20dp"
+            android:layout_marginLeft="@dimen/fm_20dp"
+            android:contentDescription="@string/posterImage"
+            android:scaleType="centerCrop"
+            android:src="@drawable/placeholder"
+            app:layout_constraintBottom_toBottomOf="@+id/backdropIV"
+            app:layout_constraintDimensionRatio="w,2:3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/backdropIV"
+            app:setDetailImage="@{viewModel.movie.posterPath}" />
+
+        <TextView
+            android:id="@+id/entertainmentTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/fm_10dp"
+            android:singleLine="true"
+            android:text="@{viewModel.movie.originalTitle}"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/fm_20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/posterPathIV"
+            app:layout_constraintTop_toBottomOf="@+id/backdropIV"
+            tools:text="Professor marston and the wonder women" />
+
+        <TextView
+            android:id="@+id/releaseDateTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.movie.releaseDate}"
+            android:textColor="@android:color/black"
+            app:layout_constraintEnd_toStartOf="@+id/runtimeTV"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toEndOf="@+id/posterPathIV"
+            app:layout_constraintTop_toBottomOf="@+id/entertainmentTitle"
+            tools:text="Mar 01, 2017" />
+
+        <TextView
+            android:id="@+id/runtimeTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{@string/runtime_format(viewModel.movie.runtime)}"
+            android:textColor="@android:color/black"
+            android:visibility="@{viewModel.movie.runtime == 0 ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="@+id/releaseDateTV"
+            app:layout_constraintEnd_toStartOf="@+id/favouriteBtn"
+            app:layout_constraintStart_toEndOf="@+id/releaseDateTV"
+            app:layout_constraintTop_toTopOf="@+id/releaseDateTV"
+            tools:text="156 min" />
+
+        <android.support.v7.widget.AppCompatRatingBar
+            android:id="@+id/voteAverage"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fm_10dp"
+            android:numStars="10"
+            android:stepSize="0.1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/background"
+            app:setRating="@{viewModel.movie.voteAverage}"
+            tools:text="vote average" />
+
+        <TextView
+            android:id="@+id/overview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fm_10dp"
+            android:text="@{viewModel.movie.overview}"
+            android:textColor="@android:color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/voteAverage"
+            tools:text="overview text" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/favouriteBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/fm_20dp"
+            android:onClick="@{(v) -> viewModel.onFavouriteFABClicked(v,viewModel.isFavourite)}"
+            android:src="@{viewModel.isFavourite ? @android:drawable/star_big_on : @android:drawable/star_big_off}"
+            app:layout_constraintBottom_toBottomOf="@+id/background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/background" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

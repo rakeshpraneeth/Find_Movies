@@ -2,9 +2,12 @@
 <resources>
 
     <!--Density Independent Pixels-->
+    <dimen name="fm_3dp">3dp</dimen>
     <dimen name="fm_5dp">5dp</dimen>
     <dimen name="fm_10dp">10dp</dimen>
     <dimen name="fm_20dp">20dp</dimen>
+    <dimen name="fm_50dp">50dp</dimen>
+    <dimen name="fm_100dp">100dp</dimen>
     <dimen name="fm_150dp">150dp</dimen>
     <dimen name="fm_230dp">230dp</dimen>
 
