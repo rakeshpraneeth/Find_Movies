@@ -1,10 +1,10 @@
 package com.krp.findmovies.viewModels;
 
-import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.content.Context;
 import android.databinding.ObservableInt;
-import android.support.annotation.NonNull;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.View;
 
 import com.krp.findmovies.R;
@@ -23,7 +23,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MoviesListViewModel extends AndroidViewModel{
+public class MoviesListViewModel implements Parcelable {
 
     private static final String POPULAR_MOVIES = "movie/popular";
     private static final String TOP_RATED_MOVIES = "movie/top_rated";
@@ -39,13 +39,15 @@ public class MoviesListViewModel extends AndroidViewModel{
 
     private AppDatabase mAppDatabase;
     private LiveData<List<Movie>> favouriteMovies;
-    private Application application;
+    private Context context;
 
-    public MoviesListViewModel(@NonNull Application application){
-        super(application);
+    private List<RowViewModel> dashboardAdapterList;
 
-        this.application = application;
-        mAppDatabase = AppDatabase.getInstance(application);
+    public MoviesListViewModel(Context context){
+
+        this.context = context;
+        mAppDatabase = AppDatabase.getInstance(context);
+        dashboardAdapterList = new ArrayList<>();
 
         progressbarVisibility = new ObservableInt(View.VISIBLE);
         noInternetVisibility = new ObservableInt(View.GONE);
@@ -77,10 +79,14 @@ public class MoviesListViewModel extends AndroidViewModel{
         this.adapter = adapter;
     }
 
+    public List<RowViewModel> getDashboardAdapterList() {
+        return dashboardAdapterList;
+    }
+
     private void fetchData(String path) {
         retrievalFailureMsgVisibility.set(View.GONE);
 
-        if (NetworkHandler.isNetworkAvailable(application)) {
+        if (NetworkHandler.isNetworkAvailable(context)) {
             noInternetVisibility.set(View.GONE);
             progressbarVisibility.set(View.VISIBLE);
             makeServiceCall(path);
@@ -97,7 +103,7 @@ public class MoviesListViewModel extends AndroidViewModel{
             fmApiService = BaseUrl.getFmApiService();
         }
 
-        Call<MoviesResponse> call = fmApiService.getMoviesList(path, application.getString(R.string.api_key));
+        Call<MoviesResponse> call = fmApiService.getMoviesList(path, context.getString(R.string.api_key));
 
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
@@ -130,7 +136,10 @@ public class MoviesListViewModel extends AndroidViewModel{
     public void fetchFavourites(){
 
         favouriteMovies = mAppDatabase.findMoviesDao().getMovies();
+    }
 
+    public void showFavourites(){
+        updateList(favouriteMovies.getValue());
         retrievalFailureMsgVisibility.set(View.GONE);
         progressbarVisibility.set(View.GONE);
         noInternetVisibility.set(View.GONE);
@@ -138,11 +147,46 @@ public class MoviesListViewModel extends AndroidViewModel{
 
     public void updateList(List<Movie> movieList){
 
-        List<RowViewModel> list = new ArrayList<>();
-        for(Movie movie: movieList){
-            list.add(new MovieItemViewModel(movie));
+        if(dashboardAdapterList !=null){
+            dashboardAdapterList.clear();
         }
-        adapter.setList(list);
+        for(Movie movie: movieList){
+            dashboardAdapterList.add(new MovieItemViewModel(movie));
+        }
+        adapter.setList(dashboardAdapterList);
         recyclerViewVisibility.set(View.VISIBLE);
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(this.noInternetVisibility, flags);
+        dest.writeParcelable(this.progressbarVisibility, flags);
+        dest.writeParcelable(this.recyclerViewVisibility, flags);
+        dest.writeParcelable(this.retrievalFailureMsgVisibility, flags);
+    }
+
+    protected MoviesListViewModel(Parcel in) {
+        this.noInternetVisibility = in.readParcelable(ObservableInt.class.getClassLoader());
+        this.progressbarVisibility = in.readParcelable(ObservableInt.class.getClassLoader());
+        this.recyclerViewVisibility = in.readParcelable(ObservableInt.class.getClassLoader());
+        this.retrievalFailureMsgVisibility = in.readParcelable(ObservableInt.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<MoviesListViewModel> CREATOR = new Parcelable.Creator<MoviesListViewModel>() {
+        @Override
+        public MoviesListViewModel createFromParcel(Parcel source) {
+            return new MoviesListViewModel(source);
+        }
+
+        @Override
+        public MoviesListViewModel[] newArray(int size) {
+            return new MoviesListViewModel[size];
+        }
+    };
 }

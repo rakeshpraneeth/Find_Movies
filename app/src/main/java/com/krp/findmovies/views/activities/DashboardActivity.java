@@ -1,7 +1,6 @@
 package com.krp.findmovies.views.activities;
 
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,6 +19,8 @@ import java.util.List;
 
 public class DashboardActivity extends AppCompatActivity {
 
+    private static final String VIEW_MODEL = "viewModel";
+    private static final String SHOWING_TYPE = "showingType";
     ActivityDashboardBinding binding;
     MoviesAdapter adapter;
     MoviesListViewModel viewModel;
@@ -32,12 +33,19 @@ public class DashboardActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dashboard);
 
         adapter = new MoviesAdapter();
-        viewModel = ViewModelProviders.of(this).get(MoviesListViewModel.class);
-
+        if (savedInstanceState == null) {
+            viewModel = new MoviesListViewModel(this);
+            viewModel.fetchPopularMovies();
+        } else {
+            isShowingFavourites = savedInstanceState.getBoolean(SHOWING_TYPE);
+            viewModel = savedInstanceState.getParcelable(VIEW_MODEL);
+            if (viewModel.getDashboardAdapterList().size() > 0) {
+                adapter.setList(viewModel.getDashboardAdapterList());
+            }
+        }
         viewModel.setAdapter(adapter);
-        viewModel.fetchPopularMovies();
-
         loadMoviesList();
+        retrieveFavourite();
         binding.setViewModel(viewModel);
     }
 
@@ -66,10 +74,17 @@ public class DashboardActivity extends AppCompatActivity {
             case R.id.favourite:
                 setTitle(item.getTitle());
                 isShowingFavourites = true;
-                retrieveFavourite();
+                viewModel.showFavourites();
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(VIEW_MODEL, viewModel);
+        outState.putBoolean(SHOWING_TYPE, isShowingFavourites);
     }
 
     private void retrieveFavourite() {

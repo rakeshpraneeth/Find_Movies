@@ -36,6 +36,7 @@ public class MovieReviewsViewModel implements Parcelable {
     public MovieReviewsViewModel(Context context, int movieId) {
         this.context = context;
         this.movieId = movieId;
+        reviewsAdapterList = new ArrayList<>();
         progressbarVisibility = new ObservableInt(View.VISIBLE);
         noReviewsTvVisibility = new ObservableInt(View.GONE);
         failureTvVisibility = new ObservableInt(View.GONE);
@@ -93,7 +94,6 @@ public class MovieReviewsViewModel implements Parcelable {
     }
 
     private void updateList(List<Review> reviews) {
-        reviewsAdapterList = new ArrayList<>();
         for (Review review : reviews) {
             reviewsAdapterList.add(new ReviewItemViewModel(review));
         }

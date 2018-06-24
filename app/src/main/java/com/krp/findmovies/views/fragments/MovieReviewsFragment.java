@@ -54,7 +54,9 @@ public class MovieReviewsFragment extends Fragment {
             }
         } else {
             viewModel = savedInstanceState.getParcelable(VIEW_MODEL);
-            adapter.setList(viewModel.getReviewsAdapterList());
+            if(viewModel.getReviewsAdapterList().size() >0) {
+                adapter.setList(viewModel.getReviewsAdapterList());
+            }
         }
         viewModel.setAdapter(adapter);
         initializeRv();

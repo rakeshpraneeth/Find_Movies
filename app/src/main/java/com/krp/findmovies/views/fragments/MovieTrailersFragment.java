@@ -55,7 +55,9 @@ public class MovieTrailersFragment extends Fragment {
             }
         }else{
             viewModel = savedInstanceState.getParcelable(VIEW_MODEL);
-            adapter.setList(viewModel.getTrailersAdapterList());
+            if(viewModel.getTrailersAdapterList().size()>0) {
+                adapter.setList(viewModel.getTrailersAdapterList());
+            }
         }
         viewModel.setAdapter(adapter);
         initializeRv();
