@@ -43,7 +43,6 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/fm_150dp"
             android:layout_marginStart="@dimen/fm_20dp"
-            android:layout_marginLeft="@dimen/fm_20dp"
             android:contentDescription="@string/posterImage"
             android:scaleType="centerCrop"
             android:src="@drawable/placeholder"
